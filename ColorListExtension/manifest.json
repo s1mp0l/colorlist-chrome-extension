@@ -1,0 +1,23 @@
+{
+  "name": "ColorList",
+  "short_name": "CL",
+  "description": "Chrome Extension to parse all the colors on the webpage and manipulate them.",
+  "version": "1.0",
+  "manifest_version": 3,
+  "icons": {
+    "128": "./img/icons/extension/128x128.png",
+    "16": "./img/icons/extension/16x16.png",
+    "32": "./img/icons/extension/32x32.png",
+    "48": "./img/icons/extension/48x48.png"
+  },
+  "permissions": [
+    "scripting",
+    "activeTab",
+    "tabs"
+  ],
+  "background":{},
+  "default_locale": "en",
+  "action": {
+    "default_popup":"popup.html"
+  }
+}

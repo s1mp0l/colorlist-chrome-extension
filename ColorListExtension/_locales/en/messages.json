@@ -1,0 +1,8 @@
+{
+  "name":  {
+    "message": "ColorList Extension"
+  },
+  "description":  {
+    "message": "Chrome Extension to parse all the colors on the webpage and manipulate them."
+  }
+}

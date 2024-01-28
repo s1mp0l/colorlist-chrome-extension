@@ -1,0 +1,32 @@
+#popupContent {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+#popupContent div {
+    width: 20px;
+    height: 20px;
+}
+
+body {
+    text-align:center;
+    width:200px;
+}
+
+button {
+    width:100%;
+    color:white;
+    background:linear-gradient(#e1c301, #d78532);
+    border-width: 0;
+    border-radius: 20px;
+    padding:5px;
+    font-weight: bold;
+    cursor:pointer;
+    transition: opacity 100ms;
+}
+
+button:active {
+    opacity: 50%;
+}
