@@ -1,18 +1,31 @@
 #popupContent {
+    margin-top: 5px;
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-row-gap: 5px;
 }
 
 #popupContent div {
-    width: 20px;
-    height: 20px;
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    padding: .5em 1em;
+    min-height: 2em;
+    border: none;
+    outline: none;
+    overflow: visible;
+}
+
+.picker_wrapper {
+    top: -50px;
+    left: 0;
+    position: absolute !important;
 }
 
 body {
     text-align:center;
-    width:200px;
+    width: 500px;
 }
 
 button {

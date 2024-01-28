@@ -1,10 +1,9 @@
 ﻿var parseBtn = document.getElementById("parseBtn");
 var colorsContainer = document.getElementById("popupContent");
 
-
-parseBtn.addEventListener("click",() => {
+parseBtn.addEventListener("click",function() {
     // Получить активную вкладку браузера
-    chrome.tabs.query({active: true}, function(tabs) {
+    chrome.tabs.query({active: true, lastFocusedWindow: true }, async (tabs) => {
         var tab = tabs[0];
         // и если она есть, то выполнить на ней скрипт
         if (tab) {
@@ -18,17 +17,25 @@ parseBtn.addEventListener("click",() => {
 function execScript(tab) {
     // Выполнить функцию на странице указанной вкладки
     // и передать результат ее выполнения в функцию onResult
-    chrome.scripting.executeScript(
-      {
-          target:{tabId: tab.id, allFrames: true},
-          func:getColors
-      },
-      onResult
-    )
+    chrome.scripting.executeScript({
+        target: { tabId: tab.id, allFrames: true },
+        func: getColors
+    }, onResult);
 }
 
 function getColors() {
-    const colorMap = new Map();
+    function RGBAToHexA(rgba, forceRemoveAlpha = false) {
+        return "#" + rgba.replace(/^rgba?\(|\s+|\)$/g, '') // Get's rgba / rgb string values
+          .split(',') // splits them at ","
+          .filter((string, index) => !forceRemoveAlpha || index !== 3)
+          .map(string => parseFloat(string)) // Converts them to numbers
+          .map((number, index) => index === 3 ? Math.round(number * 255) : number) // Converts alpha to 255 number
+          .map(number => number.toString(16)) // Converts numbers to hex
+          .map(string => string.length === 1 ? "0" + string : string) // Adds 0 when length of one number is 1
+          .join("") // Puts the array to togehter to a string
+    }
+
+    const colorMap = {};
 
     // Get all elements on the page
     const allElements = document.querySelectorAll('*');
@@ -45,11 +52,13 @@ function getColors() {
 
         // Check if the color is not transparent
         if (color !== 'rgba(0, 0, 0, 0)' && color !== 'transparent') {
-            // Add the element to the color map
-            if (colorMap.has(color)) {
-                colorMap.get(color).push(element);
+            const hex = RGBAToHexA(color);
+            // if (!colorMap.includes(hex)) colorMap.push(hex);
+
+            if (colorMap[hex]) {
+                // colorMap[hex].push({...element});
             } else {
-                colorMap.set(color, [element]);
+                colorMap[hex] = [];
             }
         }
     });
@@ -57,30 +66,24 @@ function getColors() {
     // Log the color map
     console.log(colorMap);
 
-    // setPickers(colorMap);
-
-
     return colorMap;
 }
 
+
 function onResult(frames) {
-    // TODO - Объединить списки цветов
-    // затем объединить их преобразовать их в элементы для отображения
-
-    // const colorMap = frames[0].result;
-
-    console.log(colorsContainer)
-    console.log(frames)
-
-    // if (colorMap)
-    //     colorMap.forEach((value, key) => {
-    //         const div = document.createElement('div');
-    //         div.style.backgroundColor = key;
-    //         colorsContainer.append(div);
-    //         // const picker = new Picker(div);
-    //         // console.log(picker)
-    //     })
-    //
-    // console.log(colorMap)
-
+    const colors = Object.keys(frames[0].result);
+    console.log(colors);
+    colors.forEach((el) => {
+        const div = document.createElement('div');
+        const picker = new Picker({
+            parent: div,
+            color: el,
+            alpha: false,
+            editor: false,
+            onChange: function(color) {
+                div.style.backgroundColor = color.rgbaString;
+            },
+        })
+        colorsContainer.appendChild(div);
+    })
 }

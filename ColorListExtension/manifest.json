@@ -15,6 +15,7 @@
     "activeTab",
     "tabs"
   ],
+  "host_permissions": ["<all_urls>"],
   "background":{},
   "default_locale": "en",
   "action": {
